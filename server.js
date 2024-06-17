@@ -4,10 +4,8 @@ import dotenv from 'dotenv';
 import houseRoutes from './routes/houseRoutes.js';
 import { connectDB } from './config/database.js';
 import errorHandler from './middleware/errorHandler.js';
-import os from 'os';
 import fs from 'fs';
 import https from 'https';
-import http from 'http';
 
 // Configuración de variables de entorno
 dotenv.config();
@@ -35,20 +33,6 @@ const sslOptions = {
 };
 
 // Crear el servidor HTTPS
-https.createServer(sslOptions, app).listen(port, () => {
-  // Obtener la IP del servidor
-  const networkInterfaces = os.networkInterfaces();
-  const addresses = [];
-
-  for (const iface of Object.values(networkInterfaces)) {
-    for (const alias of iface) {
-      if (alias.family === 'IPv4' && !alias.internal) {
-        addresses.push(alias.address);
-      }
-    }
-  }
-
-  const serverAddress = addresses.length > 0 ? addresses[0] : 'localhost';
-  console.log(`Server running on https://${serverAddress}:${port}`);
+https.createServer(sslOptions, app).listen(port, '0.0.0.0', () => {
+  console.log(`Server running on https://0.0.0.0:${port}`);
 });
-
