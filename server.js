@@ -5,6 +5,8 @@ import houseRoutes from './routes/houseRoutes.js';
 import { connectDB } from './config/database.js';
 import errorHandler from './middleware/errorHandler.js';
 import os from 'os';
+import fs from 'fs';
+import https from 'https';
 
 // Configuración de variables de entorno
 dotenv.config();
@@ -25,7 +27,14 @@ app.use('/', houseRoutes);
 // Middleware de manejo de errores
 app.use(errorHandler);
 
-app.listen(port, () => {
+// Leer los archivos del certificado
+const sslOptions = {
+  key: fs.readFileSync('/usr/local/vesta/ssl/certificate.key'),  // Ruta al archivo de clave
+  cert: fs.readFileSync('/usr/local/vesta/ssl/certificate.crt') // Ruta al archivo de certificado
+};
+
+// Crear el servidor HTTPS
+https.createServer(sslOptions, app).listen(port, () => {
   // Obtener la IP del servidor
   const networkInterfaces = os.networkInterfaces();
   const addresses = [];
@@ -39,5 +48,5 @@ app.listen(port, () => {
   }
 
   const serverAddress = addresses.length > 0 ? addresses[0] : 'localhost';
-  console.log(`Server running on http://${serverAddress}:${port}`);
+  console.log(`Server running on https://${serverAddress}:${port}`);
 });
