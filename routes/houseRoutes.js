@@ -15,7 +15,7 @@ const router = Router();
 
 // Configuración de Multer
 const storage = multer.diskStorage({
-  destination: '../uploads',
+  destination: '/usr/share/nginx/html/velzia/uploads',
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
     const ext = path.extname(file.originalname);
