@@ -7,6 +7,7 @@ import errorHandler from './middleware/errorHandler.js';
 import os from 'os';
 import fs from 'fs';
 import https from 'https';
+import http from 'http';
 
 // Configuración de variables de entorno
 dotenv.config();
@@ -49,4 +50,13 @@ https.createServer(sslOptions, app).listen(port, () => {
 
   const serverAddress = addresses.length > 0 ? addresses[0] : 'localhost';
   console.log(`Server running on https://${serverAddress}:${port}`);
+});
+
+// Redirigir tráfico HTTP a HTTPS
+const httpApp = express();
+httpApp.get('*', (req, res) => {
+  res.redirect(`https://${req.headers.host}${req.url}`);
+});
+http.createServer(httpApp).listen(80, () => {
+  console.log('Redireccionando tráfico HTTP a HTTPS');
 });
