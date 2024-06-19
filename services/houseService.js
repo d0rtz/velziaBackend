@@ -64,12 +64,12 @@ export const updateHouseImagesService = async (id, images) => {
   let pics = null;
 
   if (images['input-background']) {
-    bg = images['input-background'][0].path.replace(/\\/g, '/');
+    bg = images['input-background'][0].path.replace(/\\/g, '/').replace("/usr/share/nginx/html/velzia", ".");
   }
 
   if (images['input-photos']) {
     pics = images['input-photos']
-      .map((file) => file.path.replace(/\\/g, '/'))
+      .map((file) => file.path.replace(/\\/g, '/').replace("/usr/share/nginx/html/velzia", "."))
       .join(',');
   }
 
@@ -92,12 +92,12 @@ export const newHouseImagesService = async (images, body) => {
   if (!id) throw new Error('ID no presente en la solicitud');
 
   if (images['input-background']) {
-    bg = images['input-background'][0].path.replace(/\\/g, '/');
+    bg = images['input-background'][0].path.replace(/\\/g, '/').replace("/usr/share/nginx/html/velzia", ".");
   }
 
   if (images['input-photos']) {
     pics = images['input-photos']
-      .map((file) => file.path.replace(/\\/g, '/'))
+      .map((file) => file.path.replace(/\\/g, '/').replace("/usr/share/nginx/html/velzia", "."))
       .join(',');
   }
 
