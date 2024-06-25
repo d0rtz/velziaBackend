@@ -2,8 +2,8 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require('./config/database');
-const houseRoutes = require('./routes/houseRoutes');
-const errorHandler = require('./middleware/errorHandler');
+const houseRoutes = require('./routes/houseRoutes.cjs');
+const errorHandler = require('./middleware/errorHandler.cjs');
 
 dotenv.config();
 

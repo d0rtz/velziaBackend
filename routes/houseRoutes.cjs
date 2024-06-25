@@ -6,7 +6,7 @@ const {
     createHouse,
     updateHouse,
     deleteHouse
-} = require('../controllers/houseController');
+} = require('../controllers/houseController.cjs');
 
 const router = express.Router();
 
