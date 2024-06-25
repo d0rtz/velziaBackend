@@ -1,38 +1,29 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import houseRoutes from './routes/houseRoutes.js';
-import { connectDB } from './config/database.js';
-import errorHandler from './middleware/errorHandler.js';
-import fs from 'fs';
-import https from 'https';
 
-// Configuración de variables de entorno
+const express = require('express');
+const dotenv = require('dotenv');
+const connectDB = require('./config/database');
+const houseRoutes = require('./routes/houseRoutes');
+const errorHandler = require('./middleware/errorHandler');
+
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 4999;
 
-// Middlewares
+// Middleware para parsear JSON
 app.use(express.json());
-app.use(cors());
 
 // Conexión a la base de datos
 connectDB();
 
 // Rutas
-app.use('/', houseRoutes);
+app.use('/api/houses', houseRoutes);
 
 // Middleware de manejo de errores
 app.use(errorHandler);
 
-// Leer los archivos del certificado
-const sslOptions = {
-  key: fs.readFileSync('/etc/letsencrypt/live/dev.velzia.es/privkey.pem'),  // Ruta al archivo de clave
-  cert: fs.readFileSync('/etc/letsencrypt/live/dev.velzia.es/fullchain.pem') // Ruta al archivo de certificado
-};
+const PORT = process.env.PORT || 5000;
 
-// Crear el servidor HTTPS
-https.createServer(sslOptions, app).listen(port, '0.0.0.0', () => {
-  console.log(`Server running on https://0.0.0.0:${port}`);
+// Inicio del servidor
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });

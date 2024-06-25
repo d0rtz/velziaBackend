@@ -1,80 +1,95 @@
-import {
-    getHousesService,
-    getHouseByIdService,
-    createHouseService,
-    updateHouseService,
-    deleteHouseService,
-    updateHouseImagesService,
-    newHouseImagesService,
-  } from '../services/houseService.js';
-  
-  export const getHouses = async (req, res) => {
+
+const House = require('../models/House');
+
+// Obtener todas las casas
+const getHouses = async (req, res) => {
     try {
-      const houses = await getHousesService(req.params.name, req.params.id);
-      res.status(200).json({ houses });
+        const houses = await House.find({});
+        res.json(houses);
+        console.log('Fetched all houses successfully');
     } catch (error) {
-      res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Server Error' });
+        console.error(`Error fetching houses: ${error.message}`);
     }
-  };
-  
-  export const getHouseById = async (req, res) => {
+};
+
+// Obtener una casa por ID
+const getHouseById = async (req, res) => {
     try {
-      const { id } = req.params;
-      const house = await getHouseByIdService(id);
-      res.status(200).json({ house });
+        const house = await House.findById(req.params.id);
+        if (house) {
+            res.json(house);
+            console.log(`Fetched house with ID: ${req.params.id}`);
+        } else {
+            res.status(404).json({ message: 'House not found' });
+            console.warn(`House with ID: ${req.params.id} not found`);
+        }
     } catch (error) {
-      res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Server Error' });
+        console.error(`Error fetching house with ID ${req.params.id}: ${error.message}`);
     }
-  };
-  
-  export const createHouse = async (req, res) => {
+};
+
+// Crear una nueva casa
+const createHouse = async (req, res) => {
     try {
-      const house = await createHouseService(req.body);
-      res.status(201).json({ message: 'House created', id: house.insertId });
+        const { name, price, location } = req.body;
+        const newHouse = new House({ name, price, location });
+        const createdHouse = await newHouse.save();
+        res.status(201).json(createdHouse);
+        console.log(`Created new house: ${createdHouse._id}`);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Server Error' });
+        console.error(`Error creating house: ${error.message}`);
     }
-  };
-  
-  export const updateHouse = async (req, res) => {
+};
+
+// Actualizar una casa
+const updateHouse = async (req, res) => {
     try {
-      const { id } = req.params;
-      await updateHouseService(id, req.body);
-      res.status(200).json({ message: 'House updated' });
+        const { name, price, location } = req.body;
+        const house = await House.findById(req.params.id);
+
+        if (house) {
+            house.name = name || house.name;
+            house.price = price || house.price;
+            house.location = location || house.location;
+            const updatedHouse = await house.save();
+            res.json(updatedHouse);
+            console.log(`Updated house with ID: ${req.params.id}`);
+        } else {
+            res.status(404).json({ message: 'House not found' });
+            console.warn(`House with ID: ${req.params.id} not found`);
+        }
     } catch (error) {
-      res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Server Error' });
+        console.error(`Error updating house with ID ${req.params.id}: ${error.message}`);
     }
-  };
-  
-  export const updateHouseImages = async (req, res) => {
+};
+
+// Eliminar una casa
+const deleteHouse = async (req, res) => {
     try {
-      const { id } = req.params;
-      const images = req.files;
-      await updateHouseImagesService(id, images);
-      res.status(200).json({ message: 'House images updated' });
+        const house = await House.findById(req.params.id);
+
+        if (house) {
+            await house.remove();
+            res.json({ message: 'House removed' });
+            console.log(`Deleted house with ID: ${req.params.id}`);
+        } else {
+            res.status(404).json({ message: 'House not found' });
+            console.warn(`House with ID: ${req.params.id} not found`);
+        }
     } catch (error) {
-      res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Server Error' });
+        console.error(`Error deleting house with ID ${req.params.id}: ${error.message}`);
     }
-  };
-  
-  export const newHouseImages = async (req, res) => {
-    try {
-      const images = req.files;
-      const body = req.body;
-      await newHouseImagesService(images, body);
-      res.status(200).json({ message: 'House images added' });
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  };
-  
-  export const deleteHouse = async (req, res) => {
-    try {
-      const { id } = req.params;
-      await deleteHouseService(id);
-      res.status(200).json({ message: 'deleted' });
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  };
-  
+};
+
+module.exports = {
+    getHouses,
+    getHouseById,
+    createHouse,
+    updateHouse,
+    deleteHouse
+};
