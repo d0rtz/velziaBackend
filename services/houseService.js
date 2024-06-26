@@ -137,7 +137,7 @@ export const newHouseImagesService = async (images, body) => {
 
   const query = `
     UPDATE houses
-    SET ${bg ? 'background = ?' : ''} ${pics ? ', photos = ?' : ''}
+    SET ${bg ? 'background = ?' : ''} ${bg && pics ? ', photos = ?' : pics ?' photos = ?' : ''}
     WHERE id = ?
   `;
   const params = [bg, pics, id].filter((param) => param !== null);
