@@ -33,12 +33,12 @@ router.get('/zone/:name', getHouses);
 router.post('/new-house', createHouse);
 router.post('/new-house-images', upload.fields([
   { name: 'input-background', maxCount: 1 },
-  { name: 'input-photos', maxCount: 25 }
+  { name: 'input-photos', maxCount: 50 }
 ]), newHouseImages);
 router.patch('/house/:id', updateHouse);
 router.patch('/house-images/:id', upload.fields([
   { name: 'input-background', maxCount: 1 },
-  { name: 'input-photos', maxCount: 25 }
+  { name: 'input-photos', maxCount: 50 }
 ]), updateHouseImages);
 router.delete('/house/:id', deleteHouse);
 
