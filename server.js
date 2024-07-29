@@ -29,8 +29,8 @@ app.use(errorHandler);
 
 // Leer los archivos del certificado
 const sslOptions = {
-  key: fs.readFileSync('/etc/letsencrypt/live/dev.velzia.es/privkey.pem'),  // Ruta al archivo de clave
-  cert: fs.readFileSync('/etc/letsencrypt/live/dev.velzia.es/fullchain.pem') // Ruta al archivo de certificado
+  key: fs.readFileSync('/etc/letsencrypt/live/velzia.es/privkey.pem'),  // Ruta al archivo de clave
+  cert: fs.readFileSync('/etc/letsencrypt/live/velzia.es/fullchain.pem') // Ruta al archivo de certificado
 };
 
 // Crear el servidor HTTPS
